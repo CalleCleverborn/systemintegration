@@ -1,3 +1,5 @@
+<?php //login.php ?>
+
 <?php
 session_start();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -7,12 +9,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ];
     $options = [
         'http' => [
-            'header'  => "Content-type: application/json\r\n",
-            'method'  => 'POST',
+            'header' => "Content-type: application/json\r\n",
+            'method' => 'POST',
             'content' => json_encode($data),
         ],
     ];
-    $context  = stream_context_create($options);
+    $context = stream_context_create($options);
     $result = file_get_contents('http://localhost:3000/api/login', false, $context);
     if ($result === FALSE) {
         die('Error: Unable to login user.');
@@ -38,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <h1>Login</h1>
     <?php if (isset($error)): ?>
-    <p style="color: red;"><?php echo htmlspecialchars($error); ?></p>
+        <p style="color: red;"><?php echo htmlspecialchars($error); ?></p>
     <?php endif; ?>
     <form method="post">
         <label>Username:</label>

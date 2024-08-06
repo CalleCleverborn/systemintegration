@@ -1,3 +1,5 @@
+//index.js
+
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
@@ -13,9 +15,21 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-const Product = require('./models/Product');
-const User = require('./models/User');
+const productSchema = new mongoose.Schema({
+  name: String,
+  price: Number,
+  image: String,
+});
 
+const Product = mongoose.model('Product', productSchema);
+
+// Define User model
+const userSchema = new mongoose.Schema({
+  username: { type: String, unique: true },
+  password: String,
+});
+
+const User = mongoose.model('User', userSchema);
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected'))

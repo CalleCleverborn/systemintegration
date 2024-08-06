@@ -1,3 +1,5 @@
+<?php //index.php ?>
+
 <?php
 session_start();
 if (!isset($_SESSION['token'])) {
@@ -26,13 +28,13 @@ $products = json_decode($response, true);
     <h1>Products</h1>
     <ul>
         <?php foreach ($products as $product): ?>
-        <li>
-            <?php echo htmlspecialchars($product['name']); ?> -
-            <?php echo htmlspecialchars($product['price']); ?>
-            <a href="edit.php?id=<?php echo $product['_id']; ?>">Edit</a>
-            <a href="delete.php?id=<?php echo $product['_id']; ?>">Delete</a>
-            <a href="checkout.php?id=<?php echo $product['_id']; ?>">Buy</a>
-        </li>
+            <li>
+                <?php echo htmlspecialchars($product['name']); ?> -
+                <?php echo htmlspecialchars($product['price']); ?>
+                <a href="edit.php?id=<?php echo $product['_id']; ?>">Edit</a>
+                <a href="delete.php?id=<?php echo $product['_id']; ?>">Delete</a>
+                <a href="checkout.php?id=<?php echo $product['_id']; ?>">Buy</a>
+            </li>
         <?php endforeach; ?>
     </ul>
     <a href="create.php">Add New Product</a>

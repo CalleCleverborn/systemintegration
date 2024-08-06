@@ -1,3 +1,5 @@
+<?php //checkout.php ?>
+
 <?php
 session_start();
 if (!isset($_SESSION['token'])) {
@@ -52,19 +54,19 @@ $sessionId = $response['id'];
     <button id="checkout-button">Checkout</button>
 
     <script type="text/javascript">
-    var stripe = Stripe(
-        'pk_test_51PItI7Rxxg2rxu6vkw4GVJS5IOlzaBoifIk6h5pRdH9V5E2p7qFq1DDkxtc5TfXqFmARiwpb76fFFdhM3jxaIXgI00FxsZQSqW'
-    ); // Replace with your Stripe publishable key
+        var stripe = Stripe(
+            'pk_test_51PItI7Rxxg2rxu6vkw4GVJS5IOlzaBoifIk6h5pRdH9V5E2p7qFq1DDkxtc5TfXqFmARiwpb76fFFdhM3jxaIXgI00FxsZQSqW'
+        ); // Replace with your Stripe publishable key
 
-    document.getElementById('checkout-button').addEventListener('click', function() {
-        stripe.redirectToCheckout({
-            sessionId: '<?php echo $sessionId; ?>'
-        }).then(function(result) {
-            if (result.error) {
-                alert(result.error.message);
-            }
+        document.getElementById('checkout-button').addEventListener('click', function () {
+            stripe.redirectToCheckout({
+                sessionId: '<?php echo $sessionId; ?>'
+            }).then(function (result) {
+                if (result.error) {
+                    alert(result.error.message);
+                }
+            });
         });
-    });
     </script>
 </body>
 

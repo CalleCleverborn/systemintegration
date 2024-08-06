@@ -1,3 +1,5 @@
+<?php //create.php ?>
+
 <?php
 session_start();
 if (!isset($_SESSION['token'])) {
@@ -13,12 +15,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ];
     $options = [
         'http' => [
-            'header'  => "Content-type: application/json\r\n",
-            'method'  => 'POST',
+            'header' => "Content-type: application/json\r\n",
+            'method' => 'POST',
             'content' => json_encode($data),
         ],
     ];
-    $context  = stream_context_create($options);
+    $context = stream_context_create($options);
     $result = file_get_contents('http://localhost:3000/api/products', false, $context);
 
     if ($result === FALSE) {

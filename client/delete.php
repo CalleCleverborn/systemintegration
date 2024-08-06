@@ -1,3 +1,5 @@
+<?php //delete.php ?>
+
 <?php
 session_start();
 if (!isset($_SESSION['token'])) {

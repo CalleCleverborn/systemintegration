@@ -1,3 +1,5 @@
+<?php //edit.php ?>
+
 <?php
 session_start();
 if (!isset($_SESSION['token'])) {
@@ -25,12 +27,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ];
     $options = [
         'http' => [
-            'header'  => "Content-type: application/json\r\n",
-            'method'  => 'PUT',
+            'header' => "Content-type: application/json\r\n",
+            'method' => 'PUT',
             'content' => json_encode($data),
         ],
     ];
-    $context  = stream_context_create($options);
+    $context = stream_context_create($options);
     $result = file_get_contents($apiUrl, false, $context);
     if ($result === FALSE) {
         die('Error: Unable to update product.');
@@ -50,17 +52,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <h1>Edit Product</h1>
     <?php if ($product): ?>
-    <form method="post">
-        <label>Name:</label>
-        <input type="text" name="name" value="<?php echo htmlspecialchars($product['name']); ?>" required>
-        <label>Price:</label>
-        <input type="number" name="price" value="<?php echo htmlspecialchars($product['price']); ?>" required>
-        <label>Image URL:</label>
-        <input type="text" name="image" value="<?php echo htmlspecialchars($product['image']); ?>">
-        <button type="submit">Update</button>
-    </form>
+        <form method="post">
+            <label>Name:</label>
+            <input type="text" name="name" value="<?php echo htmlspecialchars($product['name']); ?>" required>
+            <label>Price:</label>
+            <input type="number" name="price" value="<?php echo htmlspecialchars($product['price']); ?>" required>
+            <label>Image URL:</label>
+            <input type="text" name="image" value="<?php echo htmlspecialchars($product['image']); ?>">
+            <button type="submit">Update</button>
+        </form>
     <?php else: ?>
-    <p>Product not found</p>
+        <p>Product not found</p>
     <?php endif; ?>
     <a href="index.php">Back to Products</a>
 </body>
