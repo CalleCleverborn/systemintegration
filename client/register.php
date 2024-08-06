@@ -1,5 +1,3 @@
-<?php //register.php ?>
-
 <?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = [
@@ -14,7 +12,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ],
     ];
     $context = stream_context_create($options);
-    $result = file_get_contents('http://localhost:3000/api/register', false, $context);
+    $result = file_get_contents('https://server-covye87re-carl-cleverborns-projects.vercel.app/api/register', false, $context);
+
     if ($result === FALSE) {
         die('Error: Unable to register user.');
     }

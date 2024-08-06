@@ -1,5 +1,3 @@
-<?php //index.php ?>
-
 <?php
 session_start();
 if (!isset($_SESSION['token'])) {
@@ -7,14 +5,24 @@ if (!isset($_SESSION['token'])) {
     exit();
 }
 
-$apiUrl = 'http://localhost:3000/api/products';
-$response = @file_get_contents($apiUrl);
+$apiUrl = 'https://server-covye87re-carl-cleverborns-projects.vercel.app/api/products';
+$options = [
+    'http' => [
+        'header' => "Authorization: Bearer " . $_SESSION['token'],
+        'method' => 'GET'
+    ]
+];
+$context = stream_context_create($options);
+$response = @file_get_contents($apiUrl, false, $context);
 
 if ($response === FALSE) {
     die('Error: Unable to retrieve products.');
 }
 
 $products = json_decode($response, true);
+if (json_last_error() !== JSON_ERROR_NONE) {
+    die('Error: Unable to decode JSON response.');
+}
 ?>
 
 <!DOCTYPE html>

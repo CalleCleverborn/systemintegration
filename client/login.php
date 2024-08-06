@@ -1,5 +1,3 @@
-<?php //login.php ?>
-
 <?php
 session_start();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -15,11 +13,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ],
     ];
     $context = stream_context_create($options);
-    $result = file_get_contents('http://localhost:3000/api/login', false, $context);
+    $result = @file_get_contents('https://server-covye87re-carl-cleverborns-projects.vercel.app/api/login', false, $context);
+
     if ($result === FALSE) {
+        $error = error_get_last();
+        echo '<pre>';
+        print_r($error);
+        echo '</pre>';
         die('Error: Unable to login user.');
     }
+
     $response = json_decode($result, true);
+
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        die('Error: Unable to decode JSON response. ' . json_last_error_msg());
+    }
+
     if (isset($response['token'])) {
         $_SESSION['token'] = $response['token'];
         header('Location: index.php');
@@ -52,4 +61,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <a href="register.php">Don't have an account? Register here</a>
 </body>
 
-</html
+</html>

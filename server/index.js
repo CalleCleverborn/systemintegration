@@ -12,8 +12,15 @@ const { Parser } = require('json2csv');
 const { js2xml } = require('xml-js');
 
 const app = express();
-app.use(cors());
+
 app.use(bodyParser.json());
+
+const corsOptions = {
+  origin: 'http://localhost:8000', 
+  optionsSuccessStatus: 200 
+};
+
+app.use(cors(corsOptions));
 
 const productSchema = new mongoose.Schema({
   name: String,

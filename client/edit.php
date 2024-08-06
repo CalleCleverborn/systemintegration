@@ -1,5 +1,3 @@
-<?php //edit.php ?>
-
 <?php
 session_start();
 if (!isset($_SESSION['token'])) {
@@ -8,7 +6,8 @@ if (!isset($_SESSION['token'])) {
 }
 
 $id = $_GET['id'];
-$apiUrl = "http://localhost:3000/api/products/$id";
+$apiUrl = "https://server-covye87re-carl-cleverborns-projects.vercel.app/api/products/$id";
+
 
 // Hämta produktinformationen
 $response = @file_get_contents($apiUrl);

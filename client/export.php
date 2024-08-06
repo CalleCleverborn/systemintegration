@@ -1,5 +1,3 @@
-<?php //export.php ?>
-
 <?php
 session_start();
 if (!isset($_SESSION['token'])) {
@@ -8,7 +6,8 @@ if (!isset($_SESSION['token'])) {
 }
 
 $exportType = $_GET['type'];
-$apiUrl = "http://localhost:3000/api/export/$exportType";
+$apiUrl = "https://server-covye87re-carl-cleverborns-projects.vercel.app/api/export/$exportType";
+
 $response = @file_get_contents($apiUrl);
 
 if ($response === FALSE) {

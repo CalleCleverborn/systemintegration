@@ -1,5 +1,3 @@
-<?php //checkout.php ?>
-
 <?php
 session_start();
 if (!isset($_SESSION['token'])) {
@@ -7,26 +5,30 @@ if (!isset($_SESSION['token'])) {
     exit();
 }
 
-$productId = $_GET['id'];
-$productApiUrl = "http://localhost:3000/api/products/$productId";
-$checkoutApiUrl = 'http://localhost:3000/api/checkout';
+if (!isset($_GET['id'])) {
+    die('Error: Product ID is required.');
+}
 
-// Hämta produktinformationen
+$productId = $_GET['id'];
+$productApiUrl = "https://server-covye87re-carl-cleverborns-projects.vercel.app/api/products/$productId";
+$checkoutApiUrl = 'https://server-covye87re-carl-cleverborns-projects.vercel.app/api/checkout';
+
+// Fetch product information
 $response = @file_get_contents($productApiUrl);
 if ($response === FALSE) {
     die('Error: Unable to retrieve product information.');
 }
 $product = json_decode($response, true);
 
-// Skapa Stripe checkout session
-$data = array('productId' => $productId);
-$options = array(
-    'http' => array(
-        'header' => "Content-type: application/json\r\n",
+// Create Stripe checkout session
+$data = json_encode(['productId' => $productId]);
+$options = [
+    'http' => [
+        'header' => "Content-type: application/json\r\nAuthorization: Bearer " . $_SESSION['token'],
         'method' => 'POST',
-        'content' => json_encode($data),
-    ),
-);
+        'content' => $data,
+    ],
+];
 $context = stream_context_create($options);
 $result = @file_get_contents($checkoutApiUrl, false, $context);
 if ($result === FALSE) {
@@ -34,6 +36,9 @@ if ($result === FALSE) {
     die('Error: Unable to create checkout session. ' . $error['message']);
 }
 $response = json_decode($result, true);
+if (json_last_error() !== JSON_ERROR_NONE) {
+    die('Error: Unable to decode JSON response. ' . json_last_error_msg());
+}
 $sessionId = $response['id'];
 ?>
 
@@ -54,19 +59,19 @@ $sessionId = $response['id'];
     <button id="checkout-button">Checkout</button>
 
     <script type="text/javascript">
-        var stripe = Stripe(
-            'pk_test_51PItI7Rxxg2rxu6vkw4GVJS5IOlzaBoifIk6h5pRdH9V5E2p7qFq1DDkxtc5TfXqFmARiwpb76fFFdhM3jxaIXgI00FxsZQSqW'
+    var stripe = Stripe(
+        'pk_test_51PItI7Rxxg2rxu6vkw4GVJS5IOlzaBoifIk6h5pRdH9V5E2p7qFq1DDkxtc5TfXqFmARiwpb76fFFdhM3jxaIXgI00FxsZQSqW'
         ); // Replace with your Stripe publishable key
 
-        document.getElementById('checkout-button').addEventListener('click', function () {
-            stripe.redirectToCheckout({
-                sessionId: '<?php echo $sessionId; ?>'
-            }).then(function (result) {
-                if (result.error) {
-                    alert(result.error.message);
-                }
-            });
+    document.getElementById('checkout-button').addEventListener('click', function() {
+        stripe.redirectToCheckout({
+            sessionId: '<?php echo $sessionId; ?>'
+        }).then(function(result) {
+            if (result.error) {
+                alert(result.error.message);
+            }
         });
+    });
     </script>
 </body>
 

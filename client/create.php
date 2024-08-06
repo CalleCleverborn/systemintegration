@@ -1,5 +1,3 @@
-<?php //create.php ?>
-
 <?php
 session_start();
 if (!isset($_SESSION['token'])) {
@@ -21,7 +19,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ],
     ];
     $context = stream_context_create($options);
-    $result = file_get_contents('http://localhost:3000/api/products', false, $context);
+    $result = file_get_contents('https://server-covye87re-carl-cleverborns-projects.vercel.app/api/products', false, $context);
+
 
     if ($result === FALSE) {
         die('Error: Unable to create product.');

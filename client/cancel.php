@@ -1,5 +1,3 @@
-<?php //cancel.php ?>
-
 <!DOCTYPE html>
 <html>
 
