@@ -13,24 +13,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ],
     ];
     $context = stream_context_create($options);
-    $result = @file_get_contents('https://server-covye87re-carl-cleverborns-projects.vercel.app/api/login', false, $context);
-
+    $result = file_get_contents('https://server-he5tclb49-carl-cleverborns-projects.vercel.app/api/login', false, $context);
     if ($result === FALSE) {
-        $error = error_get_last();
-        echo '<pre>';
-        print_r($error);
-        echo '</pre>';
         die('Error: Unable to login user.');
     }
-
     $response = json_decode($result, true);
-
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        die('Error: Unable to decode JSON response. ' . json_last_error_msg());
-    }
-
     if (isset($response['token'])) {
         $_SESSION['token'] = $response['token'];
+        $_SESSION['user_id'] = $response['userId'];
         header('Location: index.php');
         exit();
     } else {

@@ -2,7 +2,8 @@
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = [
         'username' => $_POST['username'],
-        'password' => $_POST['password']
+        'password' => $_POST['password'],
+        'phoneNumber' => $_POST['phoneNumber']  // Include phone number in the registration data
     ];
     $options = [
         'http' => [
@@ -12,8 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ],
     ];
     $context = stream_context_create($options);
-    $result = file_get_contents('https://server-covye87re-carl-cleverborns-projects.vercel.app/api/register', false, $context);
-
+    $result = file_get_contents('https://server-he5tclb49-carl-cleverborns-projects.vercel.app/api/register', false, $context);
     if ($result === FALSE) {
         die('Error: Unable to register user.');
     }
@@ -39,6 +39,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input type="text" name="username" required>
         <label>Password:</label>
         <input type="password" name="password" required>
+        <label>Phone Number:</label> <!-- Add phone number field -->
+        <input type="text" name="phoneNumber" required>
         <button type="submit">Register</button>
     </form>
     <a href="login.php">Already have an account? Login here</a>

@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ],
     ];
     $context = stream_context_create($options);
-    $result = file_get_contents('https://server-covye87re-carl-cleverborns-projects.vercel.app/api/products', false, $context);
+    $result = file_get_contents('https://server-he5tclb49-carl-cleverborns-projects.vercel.app/api/products', false, $context);
 
 
     if ($result === FALSE) {

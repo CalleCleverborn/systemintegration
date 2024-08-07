@@ -5,7 +5,7 @@ if (!isset($_SESSION['token'])) {
     exit();
 }
 
-$apiUrl = 'https://server-covye87re-carl-cleverborns-projects.vercel.app/api/products';
+$apiUrl = 'https://server-he5tclb49-carl-cleverborns-projects.vercel.app/api/products';
 $options = [
     'http' => [
         'header' => "Authorization: Bearer " . $_SESSION['token'],
