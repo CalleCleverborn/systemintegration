@@ -3,7 +3,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = [
         'username' => $_POST['username'],
         'password' => $_POST['password'],
-        'phoneNumber' => $_POST['phoneNumber']  // Include phone number in the registration data
+        'phoneNumber' => $_POST['phoneNumber']
     ];
     $options = [
         'http' => [

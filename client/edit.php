@@ -8,8 +8,6 @@ if (!isset($_SESSION['token'])) {
 $id = $_GET['id'];
 $apiUrl = "https://server-he5tclb49-carl-cleverborns-projects.vercel.app/api/products/$id";
 
-
-// Hämta produktinformationen
 $response = @file_get_contents($apiUrl);
 
 if ($response === FALSE) {

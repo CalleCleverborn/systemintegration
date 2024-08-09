@@ -13,18 +13,18 @@ $productId = $_GET['id'];
 if (!isset($_SESSION['user_id'])) {
     die('Error: User ID is required.');
 }
-$userId = $_SESSION['user_id'];  // Retrieve user_id from session
+$userId = $_SESSION['user_id'];
 $productApiUrl = "https://server-he5tclb49-carl-cleverborns-projects.vercel.app/api/products/$productId";
 $checkoutApiUrl = 'https://server-he5tclb49-carl-cleverborns-projects.vercel.app/api/checkout';
 
-// Fetch product information
+
 $response = @file_get_contents($productApiUrl);
 if ($response === FALSE) {
     die('Error: Unable to retrieve product information.');
 }
 $product = json_decode($response, true);
 
-// Create Stripe checkout session
+
 $data = json_encode(['productId' => $productId, 'userId' => $userId]);
 $options = [
     'http' => [
@@ -63,19 +63,19 @@ $sessionId = $response['id'];
     <button id="checkout-button">Checkout</button>
 
     <script type="text/javascript">
-        var stripe = Stripe(
-            'pk_test_51PItI7Rxxg2rxu6vkw4GVJS5IOlzaBoifIk6h5pRdH9V5E2p7qFq1DDkxtc5TfXqFmARiwpb76fFFdhM3jxaIXgI00FxsZQSqW'
-        ); // Replace with your Stripe publishable key
+    var stripe = Stripe(
+        'pk_test_51PItI7Rxxg2rxu6vkw4GVJS5IOlzaBoifIk6h5pRdH9V5E2p7qFq1DDkxtc5TfXqFmARiwpb76fFFdhM3jxaIXgI00FxsZQSqW'
+    );
 
-        document.getElementById('checkout-button').addEventListener('click', function () {
-            stripe.redirectToCheckout({
-                sessionId: '<?php echo $sessionId; ?>'
-            }).then(function (result) {
-                if (result.error) {
-                    alert(result.error.message);
-                }
-            });
+    document.getElementById('checkout-button').addEventListener('click', function() {
+        stripe.redirectToCheckout({
+            sessionId: '<?php echo $sessionId; ?>'
+        }).then(function(result) {
+            if (result.error) {
+                alert(result.error.message);
+            }
         });
+    });
     </script>
 </body>
 
