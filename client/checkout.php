@@ -14,8 +14,8 @@ if (!isset($_SESSION['user_id'])) {
     die('Error: User ID is required.');
 }
 $userId = $_SESSION['user_id'];
-$productApiUrl = "https://server-56o3wjrc6-carl-cleverborns-projects.vercel.app/api/products/$productId";
-$checkoutApiUrl = 'https://server-56o3wjrc6-carl-cleverborns-projects.vercel.app/api/checkout';
+$productApiUrl = "https://server-myjvvqres-carl-cleverborns-projects.vercel.app/api/products/$productId";
+$checkoutApiUrl = 'https://server-myjvvqres-carl-cleverborns-projects.vercel.app/api/checkout';
 
 
 $response = @file_get_contents($productApiUrl);
@@ -52,6 +52,7 @@ $sessionId = $response['id'];
 <head>
     <title>Checkout</title>
     <script src="https://js.stripe.com/v3/"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body>

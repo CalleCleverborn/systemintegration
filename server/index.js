@@ -16,7 +16,18 @@ const twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_A
 
 
 app.use(cors());
-app.use(bodyParser.json());  
+
+
+app.use(
+  express.json({
+    verify: (req, res, buf) => {
+      const url = req.originalUrl;
+      if (url.startsWith('/webhook')) {
+        req.rawBody = buf.toString();
+      }
+    },
+  })
+);
 
 
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -47,6 +58,12 @@ const User = mongoose.model('User', userSchema);
 app.post('/api/register', async (req, res) => {
   const { username, password, phoneNumber } = req.body;
   try {
+   
+    const existingUser = await User.findOne({ username });
+    if (existingUser) {
+      return res.status(400).json({ message: 'Username already taken' });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({ username, password: hashedPassword, phoneNumber });
     await newUser.save();
@@ -58,14 +75,19 @@ app.post('/api/register', async (req, res) => {
 });
 
 
+
 app.post('/api/login', async (req, res) => {
   const { username, password } = req.body;
   try {
     const user = await User.findOne({ username });
-    if (!user) return res.status(400).json({ message: 'User not found' });
+    if (!user) {
+      return res.status(400).json({ message: 'User not found' });
+    }
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Incorrect password' });
+    }
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
     res.json({ token, userId: user._id, phoneNumber: user.phoneNumber });
@@ -166,11 +188,14 @@ app.post('/api/checkout', async (req, res) => {
         },
       ],
       mode: 'payment',
-      success_url: 'http://localhost:8000/success.html',
-      cancel_url: 'http://localhost:8000/cancel.html',
+      success_url: 'http://localhost:8000/success.php',
+      cancel_url: 'http://localhost:8000/cancel.php',
       metadata: {
-        userId: user._id.toString()
-      }
+        userId: user._id.toString(),
+      },
+      phone_number_collection: {
+        enabled: true,
+      },
     });
 
     res.json({ id: session.id });
@@ -186,15 +211,15 @@ app.post('/webhook', bodyParser.raw({ type: 'application/json' }), (req, res) =>
   let event;
 
   try {
-    
-    event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+
+    event = stripe.webhooks.constructEvent(req.rawBody, sig, process.env.STRIPE_WEBHOOK_SECRET);
     console.log('Received event:', event.type);
   } catch (err) {
     console.error('Webhook signature verification failed:', err.message);
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
- 
+
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
     handleCheckoutSession(session);
@@ -212,12 +237,18 @@ const handleCheckoutSession = async (session) => {
       const productName = session.display_items ? session.display_items[0].custom.name : 'Unknown Product';
       const productPrice = session.display_items ? session.display_items[0].amount / 100 : 'Unknown Price';
 
+      const phoneNumber = session.customer_details.phone || user.phoneNumber;
+      if (!phoneNumber) {
+        console.error('Phone number is not available for sending SMS');
+        return;
+      }
+
       const message = `Thank you for your purchase of ${productName} for $${productPrice}. Your order will be processed shortly.`;
-      console.log('Sending SMS:', message);
+      console.log('Sending SMS to:', phoneNumber, 'Message:', message);
       await twilioClient.messages.create({
         body: message,
         from: process.env.TWILIO_PHONE_NUMBER,
-        to: user.phoneNumber
+        to: phoneNumber,
       });
       console.log('SMS sent successfully');
     } else {

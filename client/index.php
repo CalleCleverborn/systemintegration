@@ -5,7 +5,7 @@ if (!isset($_SESSION['token'])) {
     exit();
 }
 
-$apiUrl = 'https://server-56o3wjrc6-carl-cleverborns-projects.vercel.app/api/products';
+$apiUrl = 'https://server-myjvvqres-carl-cleverborns-projects.vercel.app/api/products';
 $options = [
     'http' => [
         'header' => "Authorization: Bearer " . $_SESSION['token'],
@@ -33,30 +33,37 @@ if (json_last_error() !== JSON_ERROR_NONE) {
 </head>
 
 <body>
-    <h1>Products</h1>
-    <ul>
-        <?php foreach ($products as $product): ?>
+    <header>
+        <h1>My Webshop</h1>
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </header>
+
+    <nav>
+        <a href="index.php">Home</a>
+        <a href="create.php">Add New Product</a>
+        <a href="logout.php">Logout</a>
+    </nav>
+
+    <div class="container">
+        <h2>Products</h2>
+        <ul class="product-list">
+            <?php foreach ($products as $product): ?>
             <li>
-                <?php echo htmlspecialchars($product['name']); ?> -
-                <?php echo htmlspecialchars($product['price']); ?>
+                <img src="<?php echo htmlspecialchars($product['image']); ?>"
+                    alt="<?php echo htmlspecialchars($product['name']); ?>">
+                <h2><?php echo htmlspecialchars($product['name']); ?></h2>
+                <p>Price: $<?php echo htmlspecialchars($product['price']); ?></p>
                 <a href="edit.php?id=<?php echo $product['_id']; ?>">Edit</a>
                 <a href="delete.php?id=<?php echo $product['_id']; ?>">Delete</a>
                 <a href="checkout.php?id=<?php echo $product['_id']; ?>">Buy</a>
             </li>
-        <?php endforeach; ?>
-    </ul>
-    <a href="create.php">Add New Product</a>
-    <br>
-    <form action="export.php" method="get">
-        <input type="hidden" name="type" value="csv">
-        <button type="submit">Export to CSV</button>
-    </form>
-    <form action="export.php" method="get">
-        <input type="hidden" name="type" value="xml">
-        <button type="submit">Export to XML</button>
-    </form>
-    <br>
-    <a href="logout.php">Logout</a>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 My Webshop</p>
+    </footer>
 </body>
 
 </html>

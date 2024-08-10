@@ -6,7 +6,7 @@ if (!isset($_SESSION['token'])) {
 }
 
 $exportType = $_GET['type'];
-$apiUrl = "https://server-56o3wjrc6-carl-cleverborns-projects.vercel.app/api/export/$exportType";
+$apiUrl = "https://server-myjvvqres-carl-cleverborns-projects.vercel.app/api/export/$exportType";
 
 $response = @file_get_contents($apiUrl);
 

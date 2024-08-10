@@ -6,7 +6,7 @@ if (!isset($_SESSION['token'])) {
 }
 
 $id = $_GET['id'];
-$apiUrl = "https://server-56o3wjrc6-carl-cleverborns-projects.vercel.app/api/products/$id";
+$apiUrl = "https://server-myjvvqres-carl-cleverborns-projects.vercel.app/api/products/$id";
 
 $response = @file_get_contents($apiUrl);
 
@@ -44,6 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <head>
     <title>Edit Product</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body>
