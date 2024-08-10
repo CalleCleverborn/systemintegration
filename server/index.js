@@ -14,9 +14,9 @@ const app = express();
 
 const twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
+
 app.use(cors());
-app.use(bodyParser.json({ type: 'application/json' }));
-app.use(bodyParser.raw({ type: 'application/json' }));
+app.use(bodyParser.json());  
 
 
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -42,6 +42,7 @@ const userSchema = new mongoose.Schema({
 });
 
 const User = mongoose.model('User', userSchema);
+
 
 app.post('/api/register', async (req, res) => {
   const { username, password, phoneNumber } = req.body;
@@ -74,6 +75,7 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
+
 app.get('/api/products', async (req, res) => {
   try {
     const products = await Product.find().lean();
@@ -83,6 +85,7 @@ app.get('/api/products', async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 });
+
 
 app.post('/api/products', async (req, res) => {
   try {
@@ -123,6 +126,7 @@ app.put('/api/products/:id', async (req, res) => {
   }
 });
 
+
 app.delete('/api/products/:id', async (req, res) => {
   try {
     await Product.findByIdAndDelete(req.params.id);
@@ -132,6 +136,7 @@ app.delete('/api/products/:id', async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 });
+
 
 app.post('/api/checkout', async (req, res) => {
   const { productId, userId } = req.body;
@@ -181,6 +186,7 @@ app.post('/webhook', bodyParser.raw({ type: 'application/json' }), (req, res) =>
   let event;
 
   try {
+    
     event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
     console.log('Received event:', event.type);
   } catch (err) {
@@ -188,6 +194,7 @@ app.post('/webhook', bodyParser.raw({ type: 'application/json' }), (req, res) =>
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
+ 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
     handleCheckoutSession(session);

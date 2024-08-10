@@ -6,7 +6,7 @@ if (!isset($_SESSION['token'])) {
 }
 
 $id = $_GET['id'];
-$apiUrl = "https://server-he5tclb49-carl-cleverborns-projects.vercel.app/api/products/$id";
+$apiUrl = "https://server-56o3wjrc6-carl-cleverborns-projects.vercel.app/api/products/$id";
 
 
 $options = [
