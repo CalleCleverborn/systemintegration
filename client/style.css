@@ -67,8 +67,10 @@ h2 {
 }
 
 .product-list li img {
-    max-width: 100%;
-    height: auto;
+    width: 100%;
+    height: 200px; 
+    object-fit: contain; 
+    background-color: #f4f4f4; 
 }
 
 .product-list li h2 {
